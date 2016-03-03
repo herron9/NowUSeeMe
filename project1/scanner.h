@@ -18,7 +18,7 @@ using namespace std;
 
 class Token{
 public:
-    Token (string value,tokenType type);
+    Token (string value,int type);
     void setValue(string value);
     void setType(int type);
     string getStrValue();
@@ -26,10 +26,10 @@ public:
     
 private:
     string _value;
-    tokenType _type;
+    int _type;
     
 };
 
-string scanner(FILE *fPtr);
+Token scanner(FILE *fPtr);
 #endif /* scanner_h */
 

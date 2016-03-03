@@ -8,20 +8,21 @@
 
 #ifndef parser_h
 #define parser_h
-#include <string>
+//#include <string>
 #include<stack>
 using namespace std;
 
 class TreeNode{
 public:
-    TreeNode(string value,int tyoe,TreeNode* leftc,TreeNode* rights);
+    TreeNode(string value,int type,TreeNode* leftc,TreeNode* rights);
+    TreeNode();
     void setValue(string value);
     void setType(int type);
     string getStrValue();
     int getIntType();
     void addChild(TreeNode* child);
     void preOrder();
-    void buildTree(string TkValue,int TkType,int num);
+    void buildTree(int num);
 //    TreeNode* getLeftC();
 //    TreeNode* getRightS();
     
@@ -32,6 +33,8 @@ private:
     TreeNode* RightS;
 };
 
-stack<TreeNode> AST;
+
+
+void xxxx();
 
 #endif /* parser_h */

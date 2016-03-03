@@ -2,7 +2,7 @@
 //  parser.cpp
 //  project1
 //
-//  Created by 杉田真 on 3/2/16.
+//  Created by rr on 3/2/16.
 //  Copyright © 2016 rr. All rights reserved.
 //
 
@@ -10,11 +10,17 @@
 #include <iostream>
 #include "parser.h"
 #include "Token.h"
-#include "scanner.h"
+//#include "scanner.h"
+
+
+//    stack<TreeNode> AST;
 
 TreeNode::TreeNode(string value,int type,TreeNode* leftc=nullptr,TreeNode* rights=nullptr){
     TN_value=value;
     TN_type=type;
+}
+TreeNode::TreeNode(){
+
 }
 
 void TreeNode::setValue(string value){
@@ -53,30 +59,31 @@ void TreeNode::preOrder(){
     RightS->preOrder();
 }
 
-void TreeNode::buildTree(string TkValue,int TkType,int num){
-    TreeNode* temp=nullptr;
-    TreeNode* temp1=nullptr;
-    for (int i=0; i<num; num++) {
-        temp1=&AST.top();
-        temp1->RightS=temp;
-        temp=temp1;
-        AST.pop();
-    }
-    TreeNode newnode= TreeNode(TkValue,TkType,nullptr,nullptr);
-    newnode.LeftC=temp;
-    AST.push(newnode);
-}
+//void TreeNode::buildTree(string TkValue,int TkType,int num){
+//    TreeNode* temp=nullptr;
+//    TreeNode* temp1=nullptr;
+//    for (int i=0; i<num; num++) {
+//        temp1=&AST.top();
+//        temp1->RightS=temp;
+//        temp=temp1;
+//        AST.pop();
+//    }
+//    TreeNode newnode= TreeNode(TkValue,TkType,nullptr,nullptr);
+//    newnode.LeftC=temp;
+//    AST.push(newnode);
+//}
 
-void ErrorMsg(Token errorToken,string msg){
-    cout<<errorToken.getStrValue()<<" "<<msg<<endl;
-}
 
-void readToekn(Token token){
-    if(token!=NT) ErrorMsg(token, "error!!");
-    if
-        
-    
-}
+
+//void ErrorMsg(Token errorToken,string msg){
+//    cout<<errorToken.getStrValue()<<" "<<msg<<endl;
+//}
+
+//void readToekn(Token token){
+//    if(token!=NT) ErrorMsg(token, "error!!");
+//        
+//    
+//}
 
 
 
