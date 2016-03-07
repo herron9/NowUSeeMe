@@ -10,6 +10,8 @@
 		B15A4D451C87724400C5DF36 /* parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B15A4D441C87724400C5DF36 /* parser.cpp */; };
 		B1B8F34D1C839653006A4BD4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1B8F34C1C839653006A4BD4 /* main.cpp */; };
 		B1B8F35B1C83BE7F006A4BD4 /* scanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1B8F35A1C83BE7F006A4BD4 /* scanner.cpp */; };
+		B1CEBAF41C8A55AC00C76EC2 /* treeNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1CEBAF31C8A55AC00C76EC2 /* treeNode.cpp */; };
+		B1CEBAF61C8AA29000C76EC2 /* scanPre.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1CEBAF51C8AA29000C76EC2 /* scanPre.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,12 +28,14 @@
 
 /* Begin PBXFileReference section */
 		B15A4D441C87724400C5DF36 /* parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parser.cpp; sourceTree = "<group>"; };
-		B15A4D461C87725600C5DF36 /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
+		B15A4D461C87725600C5DF36 /* treeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = treeNode.h; sourceTree = "<group>"; };
 		B1B8F3491C839653006A4BD4 /* project1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = project1; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1B8F34C1C839653006A4BD4 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		B1B8F3531C83967A006A4BD4 /* Token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
+		B1B8F3531C83967A006A4BD4 /* tokenType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tokenType.h; sourceTree = "<group>"; };
 		B1B8F3591C83BE5D006A4BD4 /* scanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scanner.h; sourceTree = "<group>"; };
 		B1B8F35A1C83BE7F006A4BD4 /* scanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = scanner.cpp; sourceTree = "<group>"; };
+		B1CEBAF31C8A55AC00C76EC2 /* treeNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treeNode.cpp; sourceTree = "<group>"; };
+		B1CEBAF51C8AA29000C76EC2 /* scanPre.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scanPre.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,11 +69,13 @@
 			isa = PBXGroup;
 			children = (
 				B1B8F34C1C839653006A4BD4 /* main.cpp */,
-				B15A4D461C87725600C5DF36 /* parser.h */,
-				B1B8F3531C83967A006A4BD4 /* Token.h */,
+				B15A4D461C87725600C5DF36 /* treeNode.h */,
+				B1B8F3531C83967A006A4BD4 /* tokenType.h */,
 				B1B8F3591C83BE5D006A4BD4 /* scanner.h */,
 				B1B8F35A1C83BE7F006A4BD4 /* scanner.cpp */,
 				B15A4D441C87724400C5DF36 /* parser.cpp */,
+				B1CEBAF31C8A55AC00C76EC2 /* treeNode.cpp */,
+				B1CEBAF51C8AA29000C76EC2 /* scanPre.cpp */,
 			);
 			path = project1;
 			sourceTree = "<group>";
@@ -132,7 +138,9 @@
 			files = (
 				B1B8F35B1C83BE7F006A4BD4 /* scanner.cpp in Sources */,
 				B15A4D451C87724400C5DF36 /* parser.cpp in Sources */,
+				B1CEBAF61C8AA29000C76EC2 /* scanPre.cpp in Sources */,
 				B1B8F34D1C839653006A4BD4 /* main.cpp in Sources */,
+				B1CEBAF41C8A55AC00C76EC2 /* treeNode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

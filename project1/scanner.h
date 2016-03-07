@@ -8,12 +8,9 @@
 
 #ifndef scanner_h
 #define scanner_h
-#include "Token.h"
+#include "tokenType.h"
 using namespace std;
 
-//void conc(){}
-
-//string scanner(){}
 
 
 class Token{
@@ -30,6 +27,23 @@ private:
     
 };
 
+
+string conc(char x,string str );
+int isOperator(char Op);
+int isLetter(char Le);
+void errorOperator();
+int isSetString(char Str);
+int isPunction(char Pu);
+int isKeyword(string Kw);
+tokenType toSpecKW(string str);
+tokenType toSpecOp(string str);
+tokenType toSpecPu(string str);
+
 Token scanner(FILE *fPtr);
+
+//===========================for parser=================================
+
+
+void rollBack(FILE *Fptr,Token bin);
 #endif /* scanner_h */
 

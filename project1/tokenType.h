@@ -6,13 +6,10 @@
 //  Copyright © 2016 rr. All rights reserved.
 //
 
-#ifndef Token_h
-#define Token_h
+#ifndef tokenType_h
+#define tokenType_h
 #include<vector>
 using namespace std;
-
-//#define MAX 8 // max length of each word string
-//#define LIMIT 200 // max number of word strings in an input file
 
 enum tokenType{
     UNDEF,		// undefined 0
@@ -22,31 +19,27 @@ enum tokenType{
     OP_plus=300,
     OP_minus,
     OP_multi,
+    OP_ls,
     OP_le,
-    OP_gr,
-    OP_and,//305
-    OP_dot,
+    OP_gr,//305
+    OP_ge,
+    OP_ampersand,//&
+    OP_dot,//308
     OP_at,
-    OP_slash,
-    OP_colon,//:
-    OP_eq,//310
-    OP_tilde,//~
-    OP_bar,//
-    OP_dollar,//
-    OP_non,//!
-    OP_number,//#315
-    OP_percent,//
-    OP_caret,//^
-    OP_underline,//_
-    OP_LeftSquare,//
-    OP_RightSquare,//320
-    OP_LeftBig,//
-    OP_RightBig,//
-    OP_Dquote,//
-    OP_Squote,//
-    OP_question,//325
+    OP_slash,//310
+    OP_eq,//
+    OP_ne,
+    OP_bar,//313
+    OP_square,
+    OP_arror,//315
     STRING=4,
     PUNCTION,//5
+    PU_open=500,
+    PU_close,
+    PU_semicolon,
+    PU_commma,
+    PU_double,
+    fn_form,//505
     KEYWORD,//6
     KW_let=600,
     KW_in,
@@ -55,22 +48,26 @@ enum tokenType{
     KW_aug,
     KW_or,//605
     KW_not,
+    //---
     KW_gr,
     KW_ge,
     KW_ls,
     KW_le,//610
     KW_eq,
     KW_ne,
+    //----
     KW_true,
     KW_false,
     KW_nil,//615
     KW_dummy,
-    KW_within,
+    KW_within,//617
     KW_and,
     KW_rec,
     KW_list,//620
-    ERROR=7,      //1
-    EOT, 		//2 end of token
+    ERRORINPUT=7,      //1
+    EOT, 		//8
+    GAMMA,
+    LAMBDA
     
 //    IDENTIFIER,
 //    KEYWORD,
