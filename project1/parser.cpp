@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <iostream>
 #include "treeNode.h"
-//#include "Token.h"
 #include "scanner.h"
 
 static Token symbol=Token("",0);
@@ -68,11 +67,8 @@ void read(FILE *fPtr,int type){
 void rollBack(FILE *fPtr,Token bin){
     int temp=int(bin.getStrValue().size());
     if (4!=bin.getIntType()&&8!=bin.getIntType()) {
-//        cout<<"rollBack "<<temp<<endl;
         fseek(fPtr, -temp, SEEK_CUR);
-
     }else if(4==bin.getIntType()&&8!=bin.getIntType()){
-//        cout<<"rollBack str"<<temp<<endl;
         temp=(int(bin.getStrValue().size())+2);
         fseek(fPtr, -temp, SEEK_CUR);
     }
@@ -103,9 +99,7 @@ void E(FILE *fPtr){
         CreateNode("lambda",10)->buildTree(AST, num+1);
         
     }else {
-//       long temp=ftell(fPtr);
         rollBack(fPtr, symbol);
-//        long temp1=ftell(fPtr);
         Ew(fPtr);
     }
 }
@@ -241,7 +235,6 @@ void Af(FILE *fPtr){
     read(fPtr);
     switch (symbol.getIntType()) {
         case 504:  Af(fPtr); CreateNode("**",504)->buildTree(AST,2); break;//**  ????
-//        case 502:  break;//;
         default: rollBack(fPtr, symbol);
     }
 }
@@ -271,9 +264,6 @@ void R(FILE *fPtr){//?
         CreateNode("gamma",9)->buildTree(AST, 2);
         read(fPtr);}
     rollBack(fPtr, symbol);
-
-//    if(8==symbol.getIntType()){;}
-//    else rollBack(fPtr, symbol);
 }
 
 void Rn(FILE *fPtr){
@@ -285,14 +275,9 @@ void Rn(FILE *fPtr){
         case 613:  CreateNode(symbol)->buildTree(AST, 0); break;
         case 614:  CreateNode(symbol)->buildTree(AST, 0); break;
         case 615:  CreateNode(symbol)->buildTree(AST, 0); break;
-        case 500:
-            E(fPtr);
-            read(fPtr, 501);
-            break;
+        case 500:  E(fPtr); read(fPtr, 501); break;
         case 616:  CreateNode(symbol)->buildTree(AST, 0); break;
-        default: //rollBack(fPtr, symbol); break;
-            cerr<<"Unexpected token "<<symbol.getStrValue()<<endl;
-            break;
+        default: cerr<<"Unexpected token "<<symbol.getStrValue()<<endl; break;
     }
 }
 
@@ -306,7 +291,6 @@ void Db(FILE *fPtr){
         readNEXT(fPtr);
         long tempnext=ftell(fPtr);
         if (1==symbol.getIntType()&&(500==NEXTsymbol.getIntType()||1==NEXTsymbol.getIntType())) {
-//            fseek(fPtr, (temp-tempnext), SEEK_CUR);
             CreateNode(symbol)->buildTree(AST, 0);//first ID
             rollBack(fPtr,NEXTsymbol);
             read(fPtr);
@@ -320,7 +304,7 @@ void Db(FILE *fPtr){
             rollBack(fPtr, symbol);
             read(fPtr, 311);
             E(fPtr);
-            CreateNode("fcn_form", 505)->buildTree(AST, N+2);
+            CreateNode("function_form", 505)->buildTree(AST, N+2);
         }else{
             fseek(fPtr, (temp-tempnext), SEEK_CUR);
             rollBack(fPtr, symbol);
@@ -347,8 +331,6 @@ void Dr(FILE *fPtr){
 void Da(FILE *fPtr){
     Dr(fPtr);
     read(fPtr);
-//    if (503==symbol.getIntType()) {;}//Dr ;
-//    else if(618==symbol.getIntType()){//and Dr+
     if (618==symbol.getIntType()) {//and
         int num=0;
         while (618==symbol.getIntType()) {
@@ -366,7 +348,6 @@ void D(FILE *fPtr){
     read(fPtr);
     switch (symbol.getIntType()) {
         case 617: D(fPtr); CreateNode("within",617)->buildTree(AST, 2); break;//????
-//        case 503: break;
         default:rollBack(fPtr, symbol); break;
     }
 }
@@ -378,7 +359,6 @@ void Vb(FILE *fPtr){
         read(fPtr);
         if (501==symbol.getIntType()) {//'('')'
             CreateNode("()", 504)->buildTree(AST, 0);
-//            read(fPtr);
         }else {//( vl )
             rollBack(fPtr, symbol);
             Vl(fPtr);
@@ -386,7 +366,6 @@ void Vb(FILE *fPtr){
         }
     }else{//<ID>
         CreateNode(symbol)->buildTree(AST, 0);
-//        read(fPtr);
     }
 }
 
@@ -415,10 +394,6 @@ void Vl(FILE *fPtr){
 
 
 void parser(FILE *fPtr){
-//    symbol=scanner(fPtr);
     E(fPtr);
     AST.top()->preOrder(0);
 }
-
-
-

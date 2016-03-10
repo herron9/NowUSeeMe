@@ -2,7 +2,7 @@
 //  treeNode.cpp
 //  project1
 //
-//  Created by 杉田真 on 3/4/16.
+//  Created by rr on 3/4/16.
 //  Copyright © 2016 rr. All rights reserved.
 //
 
@@ -12,13 +12,16 @@
 #include "treeNode.h"
 using namespace std;
 
-TreeNode::TreeNode(string value,int type,TreeNode* leftc=nullptr,TreeNode* rights=nullptr){
+TreeNode::TreeNode(string value,int type,TreeNode* leftc,TreeNode* rights){
     TN_value=value;
     TN_type=type;
+    this->LeftC = nullptr;
+    this->RightS = nullptr;
 }
 
 TreeNode::TreeNode(){
-    
+    this->LeftC = nullptr;
+    this->RightS = nullptr;
 }
 
 TreeNode::~TreeNode(){
@@ -67,7 +70,12 @@ void TreeNode::preOrder(int root){
         case 1: cout<<dot<<"<ID:"<<TN_value<<">"<<endl; break;
         case 2: cout<<dot<<"<INT:"<<TN_value<<">"<<endl; break;
         case 4: cout<<dot<<"<STR:'"<<TN_value<<"'>"<<endl; break;
+        case 613: cout<<dot<<"<"<<TN_value<<">"<<endl; break;
+        case 614: cout<<dot<<"<"<<TN_value<<">"<<endl; break;
+        case 615: cout<<dot<<"<"<<TN_value<<">"<<endl; break;
+        case 616: cout<<dot<<"<"<<TN_value<<">"<<endl; break;
         default: cout<<dot<<TN_value<<endl; break;
+            
     }
     if (this->LeftC != nullptr) this->LeftC->preOrder(root+1);
     if (this->RightS != nullptr) this->RightS->preOrder(root);

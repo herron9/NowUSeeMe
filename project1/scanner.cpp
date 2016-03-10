@@ -36,7 +36,6 @@ Token scanner(FILE *fPtr){
                         readtoken.setValue("errorInput");
                         readtoken.setType(ERRORINPUT);
                         return readtoken;
-//                        return  "errorInput";
                     }
                     else {// operator '/'
                         fseek(fPtr, -2, SEEK_CUR);
@@ -103,19 +102,16 @@ Token scanner(FILE *fPtr){
         return readtoken;
     }//end isID
     else if (ch=='\''){
-//        cout<<ch<<endl;
         ch=fgetc(fPtr);
         while (ch!='\'') {
             outputStr=conc(ch, outputStr);
             ch=getc(fPtr);
         }
         ch=fgetc(fPtr);
-//        cout<<"1"<<ch<<"1"<<endl;
         if(isPunction(ch)||isOperator(ch)||ch=='\''||ch=='\n'||ch=='\t'||ch==' '){
             fseek(fPtr, -1, SEEK_CUR);
             readtoken.setValue(outputStr);
             readtoken.setType(STRING);
-//            cout<<outputStr;
             return readtoken;//read a string successfully
         }else {
             readtoken.setValue("errorInput");
@@ -123,8 +119,6 @@ Token scanner(FILE *fPtr){
             return readtoken;
         }
     }
-//    }
-    
     readtoken.setValue("endREAD");
     readtoken.setType(EOT);
     return readtoken;

@@ -8,10 +8,7 @@
 
 #ifndef treeNode_h
 #define treeNode_h
-//#include <string>
 #include<stack>
-//#include "Token.h"
-//#include "scanner.h"
 using namespace std;
 
 class TreeNode{
@@ -70,7 +67,7 @@ void Vl(FILE *fptr);
 
 
 void read(FILE *fPtr);
-void readNEXT(FILE *fPtr);
+void readENXT(FILE *fPtr);
 void read(FILE *fPtr,int type);
 void readNEXT(FILE *fPtr,int type);
 

@@ -69,13 +69,6 @@ enum tokenType{
     GAMMA,
     LAMBDA
     
-//    IDENTIFIER,
-//    KEYWORD,
-//    NUMBER,
-//    REL_OP, 	// such as ==  <  >  =!=    =>  =<
-//    OP,			// such as = :  +  -  *  / %
-//    DELIM,		// such as . (  ) , { } ; [ ]
-    
 };
 
 const string keyword[22]={"let","in","fn","where","aug","or","not",
