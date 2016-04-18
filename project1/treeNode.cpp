@@ -79,6 +79,7 @@ void TreeNode::preOrder(int root){
         case 614: cout<<dot<<"<"<<TN_value<<">"<<endl; break;
         case 615: cout<<dot<<"<"<<TN_value<<">"<<endl; break;
         case 616: cout<<dot<<"<"<<TN_value<<">"<<endl; break;
+        case 11: cout<<dot<<"<"<<TN_value<<">"<<endl; break;
         default: cout<<dot<<TN_value<<endl; break;
             
     }

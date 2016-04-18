@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
 //int main() {
     char *fileName = argv[argc - 1];
     FILE *fPtr = fopen(fileName, "r");
-//      FILE *fPtr = fopen("/Users/herron/Documents/PLPproj/project1/tests/tiny.1", "r");
+//      FILE *fPtr = fopen("/Users/herron/Documents/PLPproj/project1/tests/recurs.1", "r");
 //    FILE *fPtr = fopen("/Users/herron/Documents/PLPproj/project1/test1", "r");
 
     fseek(fPtr, 0, SEEK_END);//check if input file is empty
