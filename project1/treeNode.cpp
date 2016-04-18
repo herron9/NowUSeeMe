@@ -15,8 +15,8 @@ using namespace std;
 TreeNode::TreeNode(string value,int type,TreeNode* leftc,TreeNode* rights){
     TN_value=value;
     TN_type=type;
-    this->LeftC = nullptr;
-    this->RightS = nullptr;
+    this->LeftC = leftc;
+    this->RightS = rights;
 }
 
 TreeNode::TreeNode(){
@@ -34,6 +34,11 @@ void TreeNode::setValue(string value){
     
 }
 void TreeNode::setType(int type){
+    TN_type=type;
+}
+
+void TreeNode::setVT(string value, int type){
+    TN_value=value;
     TN_type=type;
 }
 string TreeNode::getStrValue(){

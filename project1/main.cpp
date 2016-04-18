@@ -14,8 +14,12 @@
 using namespace std;
 
 int main(int argc, char **argv) {
+//int main() {
     char *fileName = argv[argc - 1];
     FILE *fPtr = fopen(fileName, "r");
+//      FILE *fPtr = fopen("/Users/herron/Documents/PLPproj/project1/tests/tiny.1", "r");
+//    FILE *fPtr = fopen("/Users/herron/Documents/PLPproj/project1/test1", "r");
+
     fseek(fPtr, 0, SEEK_END);//check if input file is empty
     if (ftell(fPtr) == 0) {
         printf("File is empty.\n");
@@ -24,16 +28,18 @@ int main(int argc, char **argv) {
         rewind(fPtr);
     }
     
-    string comm[4];
-    for(int i=1;i<argc-1;i++){
-       comm[i]=*argv[i];
-    }
-    for (int i=1; i<argc-1;) {
-        if ("-ast"==comm[i]) {parser(fPtr);}
-        if ("-nonout"==comm[i]) {parser(fPtr);}
-        parser(fPtr);
-        i++;
-    }
+    parser(fPtr);
+    
+//    string comm[4];
+//    for(int i=1;i<argc-1;i++){
+//       comm[i]=argv[i];
+//    }
+//    for (int i=1; i<argc-1;) {
+//        
+////        if ("-ast"==comm[i]) {parser(fPtr);}// cout<<comm[i];
+//        if ("-st"==comm[i]) {parser(fPtr); break;}
+//        i++;
+//    }
        fclose(fPtr);
     return 0;
 }

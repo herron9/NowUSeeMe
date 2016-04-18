@@ -124,7 +124,7 @@ void T(FILE *fPtr){
             num++;
             read(fPtr);
         }
-        CreateNode("tau",503)->buildTree(AST, num+1);
+        CreateNode("tau",506)->buildTree(AST, num+1);
         rollBack(fPtr, symbol);
     }else rollBack(fPtr, symbol);
 }
@@ -395,5 +395,10 @@ void Vl(FILE *fPtr){
 
 void parser(FILE *fPtr){
     E(fPtr);
-    AST.top()->preOrder(0);
+    ST=AST;
+//    AST.top()->preOrder(0);
+//    cout<<"-----"<<endl;
+    ST.top()->standardizer();
+    ST.top()->preOrder(0);
+
 }

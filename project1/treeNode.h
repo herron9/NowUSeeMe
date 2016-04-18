@@ -18,20 +18,33 @@ public:
     ~TreeNode();
     void setValue(string value);
     void setType(int type);
+    void setVT(string value,int type);
     string getStrValue();
     int getIntType();
     void addChild(TreeNode* child);
     void preOrder(int root);
     void buildTree(stack<TreeNode*> &ast, int num);
     
+    void standardizer();
+    
 private:
     string TN_value;
     int TN_type;
     TreeNode* LeftC;
     TreeNode* RightS;
+    
+    void stdlet();
+    void stdwhere();
+    void stdwithin();
+    void stdrec();
+    void stdfcn();
+    void stdlambda();
+    void stdand();
+    void stdconc();
 };
 
 static stack<TreeNode*> AST;
+static stack<TreeNode*> ST;
 
 
 void parser(FILE *fptr);

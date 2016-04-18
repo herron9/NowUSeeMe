@@ -40,11 +40,12 @@ enum tokenType{
     PU_commma,
     PU_double,
     fn_form,//505
-    KEYWORD,//6
+//    KEYWORD,//6
+    tau,//506
     KW_let=600,
     KW_in,
     KW_fn,
-    KW_where,
+    KW_where,//603
     KW_aug,
     KW_or,//605
     KW_not,
@@ -67,7 +68,9 @@ enum tokenType{
     ERRORINPUT=7,      //1
     EOT, 		//8
     GAMMA,
-    LAMBDA
+    LAMBDA,
+    Ystar,//11
+    
     
 };
 

@@ -108,7 +108,7 @@ Token scanner(FILE *fPtr){
             ch=getc(fPtr);
         }
         ch=fgetc(fPtr);
-        if(isPunction(ch)||isOperator(ch)||ch=='\''||ch=='\n'||ch=='\t'||ch==' '){
+        if(isPunction(ch)||isOperator(ch)||ch=='\''||ch=='\n'||ch=='\t'||ch==' '||ch=='\r'){
             fseek(fPtr, -1, SEEK_CUR);
             readtoken.setValue(outputStr);
             readtoken.setType(STRING);
