@@ -40,7 +40,7 @@ private:
     void stdfcn();
     void stdlambda();
     void stdand();
-    void stdconc();
+    void stdinfix();
 };
 
 static stack<TreeNode*> AST;

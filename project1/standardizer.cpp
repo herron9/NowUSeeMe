@@ -28,7 +28,7 @@ void TreeNode::standardizer(){
         case 505: this->stdfcn(); break;
         case 10 : this->stdlambda(); break;
         case 618: this->stdand(); break;
-        case 309: this->stdconc(); break;
+        case 309: this->stdinfix(); break;
     }
 }
 
@@ -78,7 +78,7 @@ void TreeNode::stdwithin(){
 void TreeNode::stdrec(){
     setVT("=", 311);
     TreeNode* eq= LeftC;
-    eq->setVT("lamdba", 10);
+    eq->setVT("lambda", 10);
     TreeNode* x=eq->LeftC;
     TreeNode* xup=new TreeNode(x->TN_value,x->TN_type,nullptr,nullptr);
     eq->LeftC=x;
@@ -139,7 +139,7 @@ void  TreeNode::stdand(){
     
 }
 
-void TreeNode::stdconc(){
+void TreeNode::stdinfix(){
     setVT("gamma", 9);
     TreeNode* e1=LeftC;
     TreeNode* n=e1->RightS;
