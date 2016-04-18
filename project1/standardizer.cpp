@@ -78,7 +78,7 @@ void TreeNode::stdwithin(){
 void TreeNode::stdrec(){
     setVT("=", 311);
     TreeNode* eq= LeftC;
-    eq->setVT("lamdba", 10);
+    eq->setVT("lambda", 10);
     TreeNode* x=eq->LeftC;
     TreeNode* xup=new TreeNode(x->TN_value,x->TN_type,nullptr,nullptr);
     eq->LeftC=x;
