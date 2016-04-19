@@ -9,6 +9,7 @@
 #ifndef treeNode_h
 #define treeNode_h
 #include<stack>
+#include <string>
 using namespace std;
 
 class TreeNode{
@@ -47,8 +48,8 @@ static stack<TreeNode*> AST;
 static stack<TreeNode*> ST;
 
 
-void parser(FILE *fptr);
-
+void parserst(FILE *fptr);
+void parserast(FILE *fptr);
 void E(FILE *fptr);
 void Ew(FILE *fptr);
 

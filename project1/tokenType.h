@@ -40,7 +40,7 @@ enum tokenType{
     PU_commma,
     PU_double,
     fn_form,//505
-//    KEYWORD,//6
+    KEYWORD,//506
     tau,//506
     KW_let=600,
     KW_in,

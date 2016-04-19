@@ -3,4 +3,4 @@ all:
 cl:
 	rm -f *.o p1
 test:
-	perl ./difftest.pl -1 "./rpal -st -noout FILE" -2 "./p1 -st FILE" -t ./tests/
+	perl ./difftest.pl -1 "./rpal -st -noout FILE" -2 "./p1 -ast FILE" -t ./tests/

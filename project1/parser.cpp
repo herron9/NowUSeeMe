@@ -393,7 +393,13 @@ void Vl(FILE *fPtr){
 }
 
 
-void parser(FILE *fPtr){
+void parserast(FILE *fPtr){
+    E(fPtr);
+    ST=AST;
+    AST.top()->preOrder(0);
+}
+
+void parserst(FILE *fPtr){
     E(fPtr);
     ST=AST;
 //    AST.top()->preOrder(0);

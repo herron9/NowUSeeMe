@@ -9,18 +9,19 @@
 #include <stdio.h>
 #include <string>
 #include "treeNode.h"
+#include <iostream>
 
 void TreeNode::standardizer(){
-    if (this->TN_value.length()==0){///????
+    if (TN_value.length()==0&&TN_type!=4){///????
         return;
     }
-    if (this->LeftC!=NULL) {
-        this->LeftC->standardizer();
+    if (LeftC!=NULL) {
+        LeftC->standardizer();
     }
-    if (this->RightS!=NULL) {
-        this->RightS->standardizer();
+    if (RightS!=NULL) {
+        RightS->standardizer();
     }
-    switch (this->TN_type) {
+    switch (TN_type) {
         case 600: this->stdlet(); break;//let
         case 603: this->stdwhere(); break;//where
         case 617: this->stdwithin(); break;//within
@@ -29,6 +30,7 @@ void TreeNode::standardizer(){
         case 10 : this->stdlambda(); break;
         case 618: this->stdand(); break;
         case 309: this->stdinfix(); break;
+        default: cout<<TN_type<<endl;
     }
 }
 
@@ -77,16 +79,36 @@ void TreeNode::stdwithin(){
 
 void TreeNode::stdrec(){
     setVT("=", 311);
-    TreeNode* eq= LeftC;
-    eq->setVT("lambda", 10);
-    TreeNode* x=eq->LeftC;
-    TreeNode* xup=new TreeNode(x->TN_value,x->TN_type,nullptr,nullptr);
-    eq->LeftC=x;
-    TreeNode* Y= new TreeNode("Y*",11,nullptr,eq);
+//    TreeNode* x= LeftC->LeftC;
+//    delete LeftC;
+//    LeftC= new TreeNode(x->TN_value,x->TN_type,x->LeftC,x->RightS);
+//    
+//    TreeNode* G= new TreeNode("gamma",9,nullptr,nullptr);
+//    LeftC->RightS=G;
+//    TreeNode* Y= new TreeNode("Y*",11,nullptr,nullptr);
+//    G->LeftC=Y;
+//    TreeNode* L= new TreeNode("lambda",10,x,nullptr);
+//    Y->RightS=L;
+//    G->LeftC->RightS=L;
+    
+    TreeNode* x= LeftC->LeftC;
+//    delete LeftC;
+    LeftC= new TreeNode(x->TN_value,x->TN_type,nullptr,nullptr);
+    TreeNode* Y= new TreeNode("Y*",11,nullptr,nullptr);
     TreeNode* G= new TreeNode("gamma",9,Y,nullptr);
-    LeftC=xup;
-    xup->RightS=G;
-    xup->LeftC=nullptr;
+    LeftC->RightS=G;
+    TreeNode* L= new TreeNode("lambda",10,x,nullptr);
+    G->LeftC->RightS=L;
+    
+//    eq->setVT("lambda", 10);
+//    TreeNode* x=eq->LeftC;
+//    TreeNode* xup=new TreeNode(x->TN_value,x->TN_type,nullptr,nullptr);
+//    eq->LeftC=x;
+//    TreeNode* Y= new TreeNode("Y*",11,nullptr,eq);
+//    TreeNode* G= new TreeNode("gamma",9,Y,nullptr);
+//    LeftC=xup;
+//    xup->RightS=G;
+//    xup->LeftC=nullptr;
 }
 
 void TreeNode::stdfcn(){
