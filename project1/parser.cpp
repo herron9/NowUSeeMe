@@ -8,8 +8,8 @@
 
 #include <stdio.h>
 #include <iostream>
-#include "cseNode.h"
 #include "scanner.h"
+#include "parser.h"
 
 static Token symbol=Token("",0);
 static Token NEXTsymbol=Token("",0);
@@ -24,7 +24,7 @@ TreeNode* CreateNode(string value,int type){
     return node;
 }
 
-void read(FILE *fPtr){
+void parser::read(FILE *fPtr){
     switch (symbol.getIntType()) {
         case 8: break;
         default:
@@ -37,7 +37,7 @@ void read(FILE *fPtr){
     }
 }
 
-void readNEXT(FILE *fPtr){
+void parser::readNEXT(FILE *fPtr){
     switch (symbol.getIntType()) {
         case 8: break;
         default:
@@ -50,7 +50,7 @@ void readNEXT(FILE *fPtr){
             break;
     }
 }
-void read(FILE *fPtr,int type){
+void parser::read(FILE *fPtr,int type){
     switch (symbol.getIntType()) {
         case 8: break;
         default:
@@ -64,7 +64,7 @@ void read(FILE *fPtr,int type){
     }
 }
 
-void rollBack(FILE *fPtr,Token bin){
+void parser::rollBack(FILE *fPtr,Token bin){
     int temp=int(bin.getStrValue().size());
     if (4!=bin.getIntType()&&8!=bin.getIntType()) {
         fseek(fPtr, -temp, SEEK_CUR);
@@ -77,7 +77,7 @@ void rollBack(FILE *fPtr,Token bin){
 }
 
 
-void E(FILE *fPtr){
+void parser::E(FILE *fPtr){
     read(fPtr);
     if(600==symbol.getIntType()){//let
         D(fPtr);
@@ -104,7 +104,7 @@ void E(FILE *fPtr){
     }
 }
 
-void Ew(FILE *fPtr){
+void parser::Ew(FILE *fPtr){
     T(fPtr);
     read(fPtr);
     Token temp = symbol;
@@ -114,7 +114,7 @@ void Ew(FILE *fPtr){
     }
 }
 
-void T(FILE *fPtr){
+void parser::T(FILE *fPtr){
     Ta(fPtr);
     read(fPtr);
     if(503==symbol.getIntType()){
@@ -129,7 +129,7 @@ void T(FILE *fPtr){
     }else rollBack(fPtr, symbol);
 }
 
-void Ta(FILE *fPtr){
+void parser::Ta(FILE *fPtr){
     Tc(fPtr);
     read(fPtr);
     while (604==symbol.getIntType()) {
@@ -141,7 +141,7 @@ void Ta(FILE *fPtr){
     rollBack(fPtr,symbol);
 }
 
-void Tc(FILE *fPtr){
+void parser::Tc(FILE *fPtr){
     B(fPtr);
     read(fPtr);
     Token temp = symbol;
@@ -151,7 +151,7 @@ void Tc(FILE *fPtr){
     }
 }
 
-void B(FILE *fPtr){
+void parser::B(FILE *fPtr){
     Bt(fPtr);
     read(fPtr);
     while (605==symbol.getIntType()) {
@@ -164,7 +164,7 @@ void B(FILE *fPtr){
     
 }
 
-void Bt(FILE *fPtr){
+void parser::Bt(FILE *fPtr){
     Bs(fPtr);
     read(fPtr);
     while (307==symbol.getIntType()) {
@@ -176,7 +176,7 @@ void Bt(FILE *fPtr){
     rollBack(fPtr,symbol);
 }
 
-void Bs(FILE *fPtr){
+void parser::Bs(FILE *fPtr){
     read(fPtr);
     if (606==symbol.getIntType()) { Bp(fPtr); CreateNode("not",606)->buildTree(AST, 1);}//???
     else{
@@ -185,7 +185,7 @@ void Bs(FILE *fPtr){
     }
 }
 
-void Bp(FILE *fPtr){
+void parser::Bp(FILE *fPtr){
     A(fPtr);
     read(fPtr);
     Token temp = symbol;
@@ -200,7 +200,7 @@ void Bp(FILE *fPtr){
     }
 }
 
-void A(FILE *fPtr){
+void parser::A(FILE *fPtr){
     read(fPtr);
     if (300==symbol.getIntType()) {At(fPtr);} else
     if (301==symbol.getIntType()) {At(fPtr);CreateNode("neg", KW_neg)->buildTree(AST, 1);}
@@ -218,7 +218,7 @@ void A(FILE *fPtr){
     
 }
 
-void At(FILE *fPtr){
+void parser::At(FILE *fPtr){
     Af(fPtr);
     read(fPtr);
     while (302==symbol.getIntType()||310==symbol.getIntType()) {
@@ -230,7 +230,7 @@ void At(FILE *fPtr){
     rollBack(fPtr,symbol);
 }
 
-void Af(FILE *fPtr){
+void parser::Af(FILE *fPtr){
     Ap(fPtr);
     read(fPtr);
     switch (symbol.getIntType()) {
@@ -238,7 +238,7 @@ void Af(FILE *fPtr){
         default: rollBack(fPtr, symbol);
     }
 }
-void Ap(FILE *fPtr){
+void parser::Ap(FILE *fPtr){
     R(fPtr);
     read(fPtr);
     while (309==symbol.getIntType()) {
@@ -251,7 +251,7 @@ void Ap(FILE *fPtr){
     rollBack(fPtr,symbol);
 }
 
-void R(FILE *fPtr){//?
+void parser::R(FILE *fPtr){//?
     Rn(fPtr);
     read(fPtr);
     while (1==symbol.getIntType()||2==symbol.getIntType()||
@@ -266,7 +266,7 @@ void R(FILE *fPtr){//?
     rollBack(fPtr, symbol);
 }
 
-void Rn(FILE *fPtr){
+void parser::Rn(FILE *fPtr){
     read(fPtr);
     switch (symbol.getIntType()) {
         case 1:  CreateNode(symbol)->buildTree(AST, 0); break;
@@ -281,7 +281,7 @@ void Rn(FILE *fPtr){
     }
 }
 
-void Db(FILE *fPtr){
+void parser::Db(FILE *fPtr){
     read(fPtr);
     if (500==symbol.getIntType()) {//( D )
         D(fPtr);
@@ -317,7 +317,7 @@ void Db(FILE *fPtr){
     
 }
 
-void Dr(FILE *fPtr){
+void parser::Dr(FILE *fPtr){
     read(fPtr);
     if (619==symbol.getIntType()) {
         Db(fPtr);
@@ -328,7 +328,7 @@ void Dr(FILE *fPtr){
     }
 }
 
-void Da(FILE *fPtr){
+void parser::Da(FILE *fPtr){
     Dr(fPtr);
     read(fPtr);
     if (618==symbol.getIntType()) {//and
@@ -343,7 +343,7 @@ void Da(FILE *fPtr){
     rollBack(fPtr,symbol);
 }
 
-void D(FILE *fPtr){
+void parser::D(FILE *fPtr){
     Da(fPtr);
     read(fPtr);
     switch (symbol.getIntType()) {
@@ -353,7 +353,7 @@ void D(FILE *fPtr){
 }
 
 
-void Vb(FILE *fPtr){
+void parser::Vb(FILE *fPtr){
         read(fPtr);
     if (500==symbol.getIntType()) {
         read(fPtr);
@@ -369,7 +369,7 @@ void Vb(FILE *fPtr){
     }
 }
 
-void Vl(FILE *fPtr){
+void parser::Vl(FILE *fPtr){
     read(fPtr);
     if (1==symbol.getIntType()) {//ID
         CreateNode(symbol)->buildTree(AST, 0);
@@ -391,28 +391,24 @@ void Vl(FILE *fPtr){
     }
     
 }
-　　
 
-void parserast(FILE *fPtr){
+void parser::parserast(FILE *fPtr){
     E(fPtr);
     ST=AST;
     AST.top()->preOrder(0);
 }
 
-void parserst(FILE *fPtr){
+void parser::parserst(FILE *fPtr){
     E(fPtr);
     ST=AST;
     ST.top()->standardizer();
     ST.top()->preOrder(0);
 
 }
-void flattentest(FILE *fPtr){
+void parser::flattentest(FILE *fPtr){
     E(fPtr);
     ST=AST;
     ST.top()->standardizer();
     ST.top()->preOrder(0);
-    ST.top()->flatten();
-    CtoS(CONTROL);
-    print(STACK);
-    
+//    ST.top()->flatten();
 }

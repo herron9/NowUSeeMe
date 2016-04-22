@@ -42,8 +42,5 @@ tokenType toSpecPu(string str);
 Token scanner(FILE *fPtr);
 
 //===========================for parser=================================
-
-
-void rollBack(FILE *Fptr,Token bin);
 #endif /* scanner_h */
 

@@ -8,102 +8,117 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "cseNode.h"
+#include "cseMachine.h"
 #include <string>
 #include <iostream>
+#include <vector>
 
 
-void TreeNode::flatten(){
-    switch (TN_type) {
-        case 1: {idC* idc= new idC;    idc->cse_Type=ID;   idc->value=TN_value; CONTROL.push(idc);break;}
-        case 2: {intC* intc= new intC; intc->cse_Type=INT; intc->value=atoi(TN_value.c_str());CONTROL.push(intc);break;}
+void CSE::flatten(TreeNode* node){
+    switch (node->getIntType()) {
+        case 1: {cseNode* idc=new idC(ID, node->getStrValue());     CONTROL.push_back(idc);break; }
+        case 2: {cseNode* intc= new intC(INT,node->getStrValue()); CONTROL.push_back(intc);break;}
         case 3:   case 300: case 301: case 302: case 303: case 304: case 305:
         case 306: case 307: case 309: case 310: case 311: case 312: case 314:
-        {opC* opc= new opC;    opc->cse_Type=OP;   opc->value=TN_value; CONTROL.push(opc);break;}
+                {cseNode* opc= new opC(OP,node->getStrValue());     CONTROL.push_back(opc);break;}
         case 606: case 612:
-        {UopC* uopc =new UopC; uopc->cse_Type=UOP; uopc->value=TN_value;CONTROL.push(uopc);break;}
-        case 4: {strC* strc= new strC; strc->cse_Type=STR; strc->value=TN_value;CONTROL.push(strc);break;}
-        case 9: {gammaC* gc=new gammaC; gc->cse_Type=GAMMa; CONTROL.push(gc); break;}
+                {cseNode* uopc =new UopC(UOP,node->getStrValue()); CONTROL.push_back(uopc);break;}
+        case 4: {cseNode* strc= new strC(STR,node->getStrValue()); CONTROL.push_back(strc);break;}
+        case 9: {cseNode* gc=new gammaC(GAMMa);                  CONTROL.push_back(gc); break;}
         case 10:{
-            lambdaC* lc=new lambdaC;
-            lc->index=RightS;
-            lc->cse_Type=LAMBDa;
-            if (503==LeftC->TN_type) {
-                TreeNode* temp =LeftC->LeftC;
-                while (temp->RightS!=nullptr) {
-                    idC* idc= new idC;
-                    idc->cse_Type=ID;
-                    idc->value=TN_value;
-                    lc->variable.push_back(idc);
-                    temp=temp->RightS;
+            cseNode* lc=new lambdaC(LAMBDa,node->getRS());
+            if (503==node->getLC()->getIntType()) {
+                TreeNode* temp =node->getLC()->getLC();
+                while (temp->getRS()!=nullptr) {
+                    cseNode* idc= new idC(ID,node->getStrValue());
+                    (dynamic_cast<lambdaC*>(lc))->variable.push_back(idc);
+                    temp=temp->getRS();
                 }
             }else
             {
-                idC* idc= new idC;
-                idc->cse_Type=ID;
-                idc->value=TN_value;
-                lc->variable.push_back(idc);
+                cseNode* idc= new idC(ID,node->getStrValue());
+                static_cast<lambdaC*>(lc)->variable.push_back(idc);
             }
             return;
         }
-        case 11: {YstarC* yc =new YstarC;          yc->cse_Type=YStar; CONTROL.push(yc);break;}
-        case 613:{truthvalueC* tc=new truthvalueC; tc->cse_Type=TRUTH;  tc->value=true; break;}
-        case 614:{truthvalueC* fc=new truthvalueC; fc->cse_Type=FALSe;  fc->value=false; break;}
+        case 11: {cseNode* yc =new YstarC(YStar); CONTROL.push_back(yc);break;}
+        case 613:{cseNode* tc=new truthvalueC(TRUTH,true);  CONTROL.push_back(tc);break;}
+        case 614:{cseNode* fc=new truthvalueC(FALSe,false); CONTROL.push_back(fc);break;}
         case 506:{
-            tauC* tauc =new tauC;
-            tauc->cse_Type=TAU;
-            TreeNode* temp= LeftC;
-            tauc->value=0;
-            while (temp->RightS!=nullptr) {
-                tauc->value++;
-                temp=temp->RightS;
+            TreeNode* temp= node->getLC();
+            int c=0;
+            while (temp->getRS()!=nullptr) {
+                c++;
+                temp=temp->getRS();
             }
-            CONTROL.push(tauc);
-            temp=LeftC;
+            cseNode* tauc =new tauC(TAU,c);
+            CONTROL.push_back(tauc);
+            temp=node->getLC();
             while (temp!=nullptr)
             {
-                temp->flatten();
-                temp=temp->RightS;
+                flatten(temp);
+                temp=temp->getRS();
             }
             return;
         }
         case 315:{
-            condC* condc= new condC;
-            condc->cse_Type=COND;
-            condc->then=LeftC->RightS;
-            condc->elsE=LeftC->RightS->RightS;
-            CONTROL.push(condc);
-            LeftC->flatten();
+            cseNode* condc= new condC(COND,node->getLC()->getRS(),node->getLC()->getRS()->getRS());
+//            condc->cse_Type=COND;
+//            condc->then=LeftC->RightS;
+//            condc->elsE=LeftC->RightS->RightS;
+            CONTROL.push_back(condc);
+            cseNode* opc=new UopC(UOP,"BATA");
+            CONTROL.push_back(opc);
+//            LeftC->flatten();
+            flatten(node->getLC());
             return;
         }
-        case 615:{nilC* nilc =new nilC; nilc->cse_Type=NIL; CONTROL.push(nilc);break;}
+        case 615:{cseNode* nilc =new nilC(NIL); CONTROL.push_back(nilc);break;}
         default: {cout<<"errorrrrrrr!!!"<<endl; break;}
             
     }
-    if (LeftC!= nullptr)
+    if (node->getLC()!= nullptr)
     {
-        LeftC->flatten();
-        if (LeftC->RightS!= nullptr)
+        flatten(node->getLC());
+        if (node->getLC()->getRS()!= nullptr)
         {
-            LeftC->RightS->flatten();
+//            LeftC->RightS->flatten();
+            flatten(node->getLC()->getRS());
         }
     }
     
 }
 
-void CtoS(stack<cseNode*> csestack){
-    cseNode* temp;
-    while (!csestack.empty()) {
-        temp=csestack.top();
-        STACK.push(temp);
-        csestack.pop();
+//void CtoS(stack<cseNode*> csestack){
+//    cseNode* temp;
+//    while (!csestack.empty()) {
+//        temp=csestack.top();
+//        STACK.push_back(temp);
+//        csestack.pop();
+//    }
+//}
+//
+//void print(stack<cseNode*> csestack){
+//    while (!csestack.empty()) {
+//        cout<<csestack.top()->cse_Type<<" ";
+//        csestack.pop();
+//    }
+//}
+
+void CSE::print(vector<cseNode*> csev)
+{
+//    const vector<cseNode*>::iterator iter = csev.begin();
+    for (auto iter = csev.cbegin(); iter != csev.cend(); iter++)
+    {
+        cout << *iter<<endl;
     }
 }
 
-void print(stack<cseNode*> csestack){
-    while (!csestack.empty()) {
-        cout<<csestack.top()->cse_Type<<" ";
-        csestack.pop();
-    }
-}
-
+//void CSE::print(const vector<cseNode*> valList)
+//{
+//    int count = valList.size();
+//    for (int i = 0; i < count;i++)
+//    {
+//        cout << valList[i]<< endl;
+//    }
+//}
