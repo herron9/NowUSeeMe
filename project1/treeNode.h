@@ -27,6 +27,7 @@ public:
     void buildTree(stack<TreeNode*> &ast, int num);
     
     void standardizer();
+    void flatten();
     
 private:
     string TN_value;
@@ -50,6 +51,7 @@ static stack<TreeNode*> ST;
 
 void parserst(FILE *fptr);
 void parserast(FILE *fptr);
+void flattentest(FILE *fptr);
 void E(FILE *fptr);
 void Ew(FILE *fptr);
 

@@ -55,7 +55,7 @@ enum tokenType{
     KW_ls,
     KW_le,//610
     KW_eq,
-    KW_ne,
+    KW_neg,
     //----
     KW_true,
     KW_false,

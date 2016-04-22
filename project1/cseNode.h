@@ -8,35 +8,141 @@
 
 #ifndef cseNode_h
 #define cseNode_h
-#include<vector>
+#include <vector>
+#include <string>
+#include <map>
+#include <iostream>
+#include "treeNode.h"
+
+using namespace std;
+
 enum CseType{
-    UNDEF,//0
-    ID,
+    ID=1,
     INT,
     OP,//3
+    UOP,
     STR,
-    PU,//5 non sense
-    KW,
-    EORROR,
-    EOT,
-    GAMMA,
-    LAMBDA,//10
-    Ystar,
+    GAMMa,//6
+    LAMBDa,
+    YStar,
+    ETA,
+    TRUTH,
+    FALSe,
+    DELTA,
+    ENV,
+    NIL,
+    DUMMY,
+    TAU,
+    TUPLE,
+    COND,
+
+    
 };
 class cseNode{
-    int cse_Type;
+public:
+    CseType cse_Type;
+//    virtual cseNode(CseType ty);
+};
+
+class idC: public cseNode{
+public:
+    string value;
+};
+
+class intC: public cseNode{
+public:
+    int value;
+};
+
+class opC: public cseNode{
+public:
+    string value;
+};
+
+class UopC: public cseNode{
+public:
+    string value;
+};
+
+class strC: public cseNode{
+public:
+    string value;
+};
+
+class gammaC: public cseNode{
+public:
     
 };
-class idf: public cseNode{
-    
-};
-class lambda: public cseNode{
-    
+
+class lambdaC: public cseNode{
+public:
     TreeNode* index;
-    vector<cseNode> vb;
+    vector<cseNode*> variable;
     int env;
     
 };
+
+class YstarC: public cseNode{
+public:
+    
+};
+
+class truthvalueC: public cseNode{
+public:
+    bool value;
+    
+};
+
+class tauC: public cseNode{
+public:
+    int value;
+};
+
+class tupleC: public cseNode{
+public:
+    vector<cseNode*> tuple;
+};
+
+class condC: public cseNode{
+public:
+    TreeNode* then;
+    TreeNode* elsE;
+    
+};
+
+class etaC: public cseNode{
+public:
+    TreeNode* index;
+    //    vector<cseNode> vb;
+    int env;
+};
+
+class nilC: public cseNode{
+public:
+    
+};
+
+class dummyC: public cseNode{
+public:
+    
+};
+
+class envC: public cseNode{
+public:
+    envC* previous;
+    int value;
+    map<string,int> pairs;
+
+};
+
+static stack<cseNode*> CONTROL;
+static stack<cseNode*> STACK;
+
+
+void CtoS(stack<cseNode*> csest);
+void print(stack<cseNode*> csest);
+
+
 
 
 #endif /* cseNode_h */

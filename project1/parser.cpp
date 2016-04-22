@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 #include <iostream>
-#include "treeNode.h"
+#include "cseNode.h"
 #include "scanner.h"
 
 static Token symbol=Token("",0);
@@ -203,7 +203,7 @@ void Bp(FILE *fPtr){
 void A(FILE *fPtr){
     read(fPtr);
     if (300==symbol.getIntType()) {At(fPtr);} else
-    if (301==symbol.getIntType()) {At(fPtr);CreateNode("neg", OP_minus)->buildTree(AST, 1);}
+    if (301==symbol.getIntType()) {At(fPtr);CreateNode("neg", KW_neg)->buildTree(AST, 1);}
     else {
         rollBack(fPtr, symbol);
         At(fPtr);}
@@ -391,7 +391,7 @@ void Vl(FILE *fPtr){
     }
     
 }
-
+　　
 
 void parserast(FILE *fPtr){
     E(fPtr);
@@ -402,9 +402,17 @@ void parserast(FILE *fPtr){
 void parserst(FILE *fPtr){
     E(fPtr);
     ST=AST;
-//    AST.top()->preOrder(0);
-//    cout<<"-----"<<endl;
     ST.top()->standardizer();
     ST.top()->preOrder(0);
 
+}
+void flattentest(FILE *fPtr){
+    E(fPtr);
+    ST=AST;
+    ST.top()->standardizer();
+    ST.top()->preOrder(0);
+    ST.top()->flatten();
+    CtoS(CONTROL);
+    print(STACK);
+    
 }

@@ -30,7 +30,7 @@ void TreeNode::standardizer(){
         case 10 : this->stdlambda(); break;
         case 618: this->stdand(); break;
         case 309: this->stdinfix(); break;
-        default: cout<<TN_type<<endl;
+//        default: cout<<TN_type<<endl;
     }
 }
 
