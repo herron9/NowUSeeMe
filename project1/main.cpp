@@ -14,11 +14,11 @@
 
 using namespace std;
 
-//int main(int argc, char **argv) {
-int main() {
-//    char *fileName = argv[argc - 1];
-//    FILE *fPtr = fopen(fileName, "r");
-      FILE *fPtr = fopen("/Users/herron/Documents/PLPproj/project1/project1/tests/prog", "r");
+int main(int argc, char **argv) {
+//int main() {
+    char *fptr = argv[argc - 1];
+    FILE *fPtr = fopen(fptr, "r");
+//      FILE *fPtr = fopen("/Users/herron/Documents/PLPproj/project1/project1/tests/t2", "r");
 //    FILE *fPtr = fopen("/Users/herron/Documents/PLPproj/project1/test1", "r");
 
     fseek(fPtr, 0, SEEK_END);//check if input file is empty
@@ -28,22 +28,26 @@ int main() {
     } else {
         rewind(fPtr);
     }
-    
-    parser* pser=new parser;
-    pser->E(fPtr);
-    pser->AST.top()->preOrder(0);
-    cout<<"-------start st------"<<endl;
-    pser->AST.top()->standardizer();
-    pser->AST.top()->preOrder(0);
-    cout<<"-------start flatten------"<<endl;
+
     CSE* cse=new CSE;
-    cse->root=pser->AST.top();
-    cse->flatten(cse->root);
-    cout<<cse->CONTROL[1]->cse_Type<<""<<static_cast<lambdaC*>(CONTROL[1])->value<<endl;
-    cse->print(cse->CONTROL);
+    cse->RUNcse(fptr);
     
-//    flattentest(fPtr);
-       fclose(fPtr);
+    string comm[4];
+    for(int i=1;i<argc-1;i++){
+        comm[i]=argv[i];
+    }
+    for (int i=1; i<argc-1;) {
+        if ("-ast"==comm[i]) {
+            parser* pser=new parser;
+            pser->E(fPtr);
+            pser->AST.top()->preOrder(0);
+        }else{
+
+        }
+
+        i++;
+    }
+    fclose(fPtr);
     return 0;
 }
 

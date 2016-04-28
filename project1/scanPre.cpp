@@ -86,7 +86,7 @@ tokenType toSpecOp(string str){
     if (str=="+")  return OP_plus;//300
     if (str=="-")  return OP_minus;
     if (str=="*")  return OP_multi;
-    if (str=="<")  return OP_ls;
+    if (str=="<")  return OP_ls;//303
     if (str=="<=")  return OP_le;
     if (str==">")  return OP_gr;//305
     if (str==">=")  return OP_ge;

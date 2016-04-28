@@ -26,6 +26,20 @@ public:
     void print(vector<cseNode*> csev);
     void CtoS(stack<cseNode*> csest);
     void print(stack<cseNode*> csest);
+    
+    
+    void runCSE(TreeNode* node);
+    void RUNcse(string str);
+    
+    
+    cseNode* lookup(cseNode* node,envC* envc);
+    cseNode* naryConvert(cseNode* node,cseNode* rand);
+    cseNode* binop(cseNode* op,cseNode* rand1,cseNode* rand2);
+    cseNode* uop(cseNode* op,cseNode* rand);
+    cseNode* maketuple(cseNode* tup);
+    void     intrinsicFn(cseNode* intrinsic);
+    void     ISintrinsicFn(cseNode* node);
+    void     HasTAB(cseNode* node);
 
     
     

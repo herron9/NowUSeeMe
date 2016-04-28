@@ -1,6 +1,6 @@
 all:
-	g++ -std=c++11 main.cpp parser.cpp scanner.cpp scanPre.cpp treeNode.cpp standardizer.cpp -o p1
+	g++ -std=c++11 main.cpp parser.cpp scanner.cpp scanPre.cpp treeNode.cpp standardizer.cpp flatten.cpp -o p1
 cl:
-	rm -f *.o p1
+	rm -f *.o p2
 test:
-	perl ./difftest.pl -1 "./rpal -st -noout FILE" -2 "./p1 -ast FILE" -t ./tests/
+	perl ./difftest.pl -1 "./rpal FILE" -2 "./p2  FILE" -t ./tests/

@@ -26,61 +26,66 @@ enum CseType{
     LAMBDa,
     YStar,
     ETA,
-    TRUTH,//10
+    TF,//10
     FALSe,
     DELTA,
-    ENV,
+    ENV,//13
     NIL,
     DUMMY,
-    TAU,
+    TAU,//16
     TUPLE,
     COND,
     BATA,//19
+    RPAL
 
     
 };
 class cseNode{
 public:
     CseType cse_Type;
-//    virtual cseNode(CseType ty);
+    string value;
+//    virtual void print();
+    virtual ~cseNode() {}
 };
 
 class envC: public cseNode{
 public:
+    envC(int envx,envC* pre){cse_Type=ENV;value=envx;previous=pre;};
     envC* previous;
     int value;
-    map<string,int> pairs;
+    map<string,cseNode*> pairs;
     
 };
 
 class idC: public cseNode{
 public:
     idC(CseType ty,string val){cse_Type=ty;value=val;}
-    string value;
+    
 };
 
 class intC: public cseNode{
 public:
     intC(CseType ty,string val){cse_Type=ty;value=val;}
-    string value;
 };
 
 class opC: public cseNode{
 public:
-    opC(CseType ty,string val){cse_Type=ty;value=val;}
-    string value;
+    opC(CseType ty,int tty,string val){cse_Type=ty;Tty=tty; value=val;}
+//    string value;
+    int Tty;
 };
 
 class UopC: public cseNode{
 public:
-    UopC(CseType ty,string val){cse_Type=ty;value=val;}
-    string value;
+    UopC(CseType ty,int tty,string val){cse_Type=ty;Tty=tty; value=val;}
+//    string value;
+    int Tty;
 };
 
 class strC: public cseNode{
 public:
     strC(CseType ty,string val){cse_Type=ty;value=val;}
-    string value;
+//    string value;
 };
 
 class gammaC: public cseNode{
@@ -95,6 +100,9 @@ public:
     TreeNode* index;
     vector<cseNode*> variable;
     envC* env;
+    
+//    void print();
+    virtual ~lambdaC() {}
     
 };
 
@@ -119,8 +127,9 @@ public:
 
 class tupleC: public cseNode{
 public:
-    tupleC(CseType ty){cse_Type=ty;}
+    tupleC(int val){cse_Type=TUPLE;value=val;}
     vector<cseNode*> tuple;
+    int value;
 };
 
 class condC: public cseNode{
@@ -146,6 +155,7 @@ public:
 
 class dummyC: public cseNode{
 public:
+    dummyC(){cse_Type=DUMMY;}
     
 };
 
