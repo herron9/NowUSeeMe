@@ -1,0 +1,7 @@
+UFID:18201976
+NAME:Herong Yang
+
+To compile: type "make"
+To clean up: type "make cl"
+
+To test p2£¨result only£©: type "p2  FILENAME"

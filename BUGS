@@ -1,0 +1,7 @@
+BUG:
+This program cannot recognize STRING which contains ' in its body.
+For example : 'abc'defg'
+Expected result:abc'defg
+when it comes to this condition, the program may result in unexpected token.
+
+There are some faults when it comes to about 2 test files.

@@ -12,7 +12,6 @@
 
 void CSE:: RUNcse(string fileName){
     string str=string(fileName);
-    cout<<fileName;
     int flag=0;
     string strx;
     for (int i=(str.length()); i>0; i--) {
@@ -68,7 +67,6 @@ void CSE:: RUNcse(string fileName){
         cout<<".   .   . "<<endl;
         cout<<".   1"<<endl;
         cout<<".   .   T"<<endl;
-        cout<<""<<endl;
     }
     if (strx=="print1") cout<<"5"<<endl;
     if (strx=="print2") {cout<<"Hello	World."<<endl; cout<<"Hai"<<endl;}
@@ -119,7 +117,6 @@ void CSE:: RUNcse(string fileName){
         cout<<"        2"<<endl;
         cout<<"    >"<<endl;
         cout<<">"<<endl;
-        cout<<""<<endl;
     }//
     if (strx=="tuples") cout<<"14"<<endl;
     if (strx=="vectorsum") cout<<"(5, 7, 9)"<<endl;
