@@ -24,13 +24,11 @@ public:
     vector<cseNode*> STACK;
     
     void print(vector<cseNode*> csev);
-    void CtoS(stack<cseNode*> csest);
-    void print(stack<cseNode*> csest);
-    
+    void prints(vector<cseNode*> csev);
+    void printenv(vector<cseNode*> csev);
+    void printenvs(vector<cseNode*> csev);
     
     void runCSE(TreeNode* node);
-    void RUNcse(string str);
-    
     
     cseNode* lookup(cseNode* node,envC* envc);
     cseNode* naryConvert(cseNode* node,cseNode* rand);

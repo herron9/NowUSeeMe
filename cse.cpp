@@ -13,14 +13,20 @@
 #include <cmath>
 
 static cseNode* Genv =new envC(0,nullptr);
+static vector<cseNode*> envV;
 static bool printbool =false;
 static cseNode* printnode;
+static vector<cseNode*> printx;
+static int concx=0;
+static int countt=1;
+static int envct=1;
 
 void CSE::runCSE(TreeNode* root){
     //Initial
     cseNode* env = new envC(0,nullptr);
     Genv=env;
     CONTROL.push_back(env);
+    envV.push_back(env);
     flatten(root);
     
     STACK.push_back(env);
@@ -32,6 +38,7 @@ void CSE::runCSE(TreeNode* root){
         switch (node->cse_Type) {
             case 1:{//rule1
                 cseNode* ob=lookup(node,dynamic_cast<envC*>(Genv));
+
                 if(ob==nullptr) {
                     ISintrinsicFn(node);
                     STACK.push_back(node);
@@ -62,8 +69,14 @@ void CSE::runCSE(TreeNode* root){
                 cseNode* op=CONTROL.back();
                 cseNode* rand=STACK.back();
                 STACK.pop_back();
+                CONTROL.pop_back();
                 cseNode* result =uop(op, rand);
-                STACK.push_back(result);
+                if (result==NULL) {
+                    ;
+                }else{
+                    STACK.push_back(result);
+                }
+                
                 break;
             }
 
@@ -90,7 +103,7 @@ void CSE::runCSE(TreeNode* root){
                         STACK.push_back(em);
                        break;
                     }
-                    case 17:{//rule10
+                    case 17:{//rule10 tuple selection
                         CONTROL.pop_back();
                         cseNode* tup =STACK.back();//get tuple
                         STACK.pop_back();
@@ -99,6 +112,29 @@ void CSE::runCSE(TreeNode* root){
                         STACK.pop_back();
                         cseNode* VI =dynamic_cast<tupleC*>(tup)->tuple[index-1];
                         STACK.push_back(VI);
+                        break;
+                    }
+                    case 8:{//Ystar
+                        CONTROL.pop_back();//pop G
+                        STACK.pop_back();//pop Y
+                        cseNode* temp = STACK.back();
+                        TreeNode* ind=dynamic_cast<lambdaC*>(temp)->index;
+                        cseNode* eta=new etaC(ETA,ind,dynamic_cast<envC*>(dynamic_cast<lambdaC*>(temp)->env));
+                        dynamic_cast<etaC*>(eta)->vb=dynamic_cast<lambdaC*>(temp)->variable;
+                        STACK.pop_back();//pop L
+                        STACK.push_back(eta);
+                        break;
+                    }
+                    case 9:{
+                        cseNode* gc=new gammaC(GAMMa);
+                        CONTROL.push_back(gc);
+                        cseNode* temp =STACK.back();
+                        TreeNode* ind=dynamic_cast<etaC*>(temp)->index;
+                        cseNode* lc=new lambdaC(LAMBDa,ind);
+                        dynamic_cast<lambdaC*>(lc)->env=dynamic_cast<envC*>(Genv);//?????????
+//                        dynamic_cast<lambdaC*>(lc)->env=dynamic_cast<envC*>(dynamic_cast<etaC*>(temp)->env);
+                        dynamic_cast<lambdaC*>(lc)->variable=dynamic_cast<etaC*>(temp)->vb;
+                        STACK.push_back(lc);
                         break;
                     }
                     case 20://rpal
@@ -114,14 +150,33 @@ void CSE::runCSE(TreeNode* root){
             }
                 
             case 13:{//rule5
+                cseNode* emc=CONTROL.back();
                 CONTROL.pop_back();
                 cseNode* Snode =STACK.back();
                 STACK.pop_back();
                 cseNode* em =STACK.back();
                 STACK.pop_back();//pop em
+                if (dynamic_cast<envC*>(emc)->value!=dynamic_cast<envC*>(em)->value) {
+                    cout<<"errorrrrrrrrr"<<endl;
+                }
                 STACK.push_back(Snode);
-                if(dynamic_cast<envC*>(em)->previous!=nullptr)
-                    Genv=dynamic_cast<envC*>(em)->previous;
+                int size=CONTROL.size();
+                int i=size-1;
+                while (i>=0&&CONTROL[i]->cse_Type!=ENV) {
+                    i--;
+                }
+                if (i>=0) {
+                    Genv=dynamic_cast<envC*>(CONTROL[i]);
+//                    for (; i>=0; i--) {
+//                        if (CONTROL[i]->cse_Type==ENV) {
+//                            Genv=dynamic_cast<envC*>(CONTROL[i]);
+//                        }
+//                    }
+                }
+//                cout<<"xxxxxxxxx"<<i<<endl;
+
+//                if(dynamic_cast<envC*>(em)->previous!=nullptr&&Snode->cse_Type!=LAMBDa&&Snode->cse_Type!=ETA)
+//                    Genv=dynamic_cast<envC*>(em)->previous;
                 break;
             }
             case 16:{//rule 9  tuple
@@ -137,11 +192,20 @@ void CSE::runCSE(TreeNode* root){
                 CONTROL.pop_back();//pop cond
                 cseNode* TF=STACK.back();
                 if(dynamic_cast<truthvalueC*>(TF)->value==true){
-                    flatten(dynamic_cast<condC*>(cond)->then);
+                    TreeNode* temp1=dynamic_cast<condC*>(cond)->then;
+                    TreeNode* temp3=dynamic_cast<condC*>(cond)->then->getRS();
+                    temp1->setRSnull();
+                    flatten(temp1);
+                    temp1->setRS(temp3);
                 }else if(dynamic_cast<truthvalueC*>(TF)->value==false){
-                    flatten(dynamic_cast<condC*>(cond)->elsE);
+                    TreeNode* temp2=dynamic_cast<condC*>(cond)->elsE;
+//                    TreeNode* temp3=dynamic_cast<condC*>(cond)->elsE->getRS();
+                    temp2->setRSnull();
+                    flatten(temp2);
+//                    temp2->getRS()->setRS(temp3);
                 }
                 STACK.pop_back();
+                break;
                 
             }
             default: {
@@ -151,15 +215,20 @@ void CSE::runCSE(TreeNode* root){
                 break;
             }
         }//end switch
-//        cout<<"control-----"<<endl;
+//        cout<<"---"<<countt<<"---"<<endl;
+//        countt++;
+//        cout<<"control----------------------                                                 ---------------------stack"<<endl;
 //        print(CONTROL);
-//        cout<<"stack------"<<endl;
-//        print(STACK);
+////        cout<<"------------stack"<<endl;
+//        prints(STACK);
+//        cout<<endl;
+//        printenv(CONTROL);
+//        printenvs(STACK);
+//        cout<<endl;
     }
-    
+//    cout<<"the output is:"<<endl;
     if (printbool==true) {
         HasTAB(printnode);
-//        cout<<printnode->value<<endl;
     }else{
         cout<<" "<<endl;
     }
@@ -181,25 +250,27 @@ cseNode* CSE::lookup(cseNode* csen, envC* envc){
         temp=temp->previous;
         iter=temp->pairs.find(id);
     }
+    temp=envc;
+
+    
+
     return nullptr;
 }
 
 cseNode* CSE::naryConvert(cseNode* lam, cseNode* rand){
     int num=dynamic_cast<lambdaC*>(lam)->variable.size();
-    int ec=dynamic_cast<lambdaC*>(lam)->env->value;
     
-    cseNode* em=new envC(ec+1,dynamic_cast<envC*>(Genv));
+    cseNode* em=new envC(envct,dynamic_cast<lambdaC*>(lam)->env);
+    envct++;
     Genv=em;
     if (num==1) {
-        string str= dynamic_cast<lambdaC*>(lam)->variable.back()->value;
+        string str= dynamic_cast<lambdaC*>(lam)->variable[0]->value;
         dynamic_cast<envC*>(em)->pairs.insert(pair<string, cseNode*>(str,rand));
     } else {
-//        int i =0;
     while (num>0) {
-        string str= dynamic_cast<lambdaC*>(lam)->variable.back()->value;
+        string str= dynamic_cast<lambdaC*>(lam)->variable[num-1]->value;
         cseNode* val=dynamic_cast<tupleC*>(rand)->tuple[num-1];
         dynamic_cast<envC*>(em)->pairs.insert(pair<string, cseNode*>(str,val));
-        dynamic_cast<lambdaC*>(lam)->variable.pop_back();
         num--;
     }
     }
@@ -269,7 +340,7 @@ cseNode* CSE::binop(cseNode* op, cseNode* rand1, cseNode* rand2){
             return thc;}
         case 307:{//&
             cseNode* thc;
-            if (c&&b) thc= new  truthvalueC(TF,true);
+            if (c&&d) thc= new  truthvalueC(TF,true);
             else     thc= new  truthvalueC(TF,false);
             return thc;}
         case 311:{//eq  int
@@ -283,7 +354,7 @@ cseNode* CSE::binop(cseNode* op, cseNode* rand1, cseNode* rand2){
                 }
                 case 1:
                 {
-                    if (e==f) thc= new  truthvalueC(TF,true);
+                    if (e.compare(f)==0) thc= new  truthvalueC(TF,true);
                     else      thc= new  truthvalueC(TF,false);
                     return thc;
                 }
@@ -301,7 +372,7 @@ cseNode* CSE::binop(cseNode* op, cseNode* rand1, cseNode* rand2){
                 }
                 case 1:
                 {
-                    if (e!=f) thc= new  truthvalueC(TF,true);
+                    if (e.compare(f)!=0) thc= new  truthvalueC(TF,true);
                     else      thc= new  truthvalueC(TF,false);
                     return thc;
                 }
@@ -316,7 +387,6 @@ cseNode* CSE::binop(cseNode* op, cseNode* rand1, cseNode* rand2){
             return thc;
             
         }
-            //-----------------------------------------------???
         case 314://**
         {
             int y= pow(b,a);
@@ -344,7 +414,7 @@ cseNode* CSE::binop(cseNode* op, cseNode* rand1, cseNode* rand2){
 }
 
 cseNode* CSE::uop(cseNode* op, cseNode* rand){
-    opC* opx= dynamic_cast<opC*>(op);
+    UopC* opx= dynamic_cast<UopC*>(op);
     int a=0;
     bool c=true;
     if (rand->cse_Type==INT) {
@@ -387,6 +457,7 @@ void CSE::intrinsicFn(cseNode* node){
     if (node->value=="Print") {
         STACK.pop_back();//pop print
         printnode= STACK.back();
+        printx.push_back(printnode);
         STACK.pop_back();
         cseNode* dummy = new dummyC();
         STACK.push_back(dummy);
@@ -442,7 +513,7 @@ void CSE::intrinsicFn(cseNode* node){
     }
     if(node->value=="Istuple"){
         STACK.pop_back();//pop op
-        if(STACK.back()->cse_Type==TUPLE){
+        if(STACK.back()->cse_Type==TUPLE||STACK.back()->cse_Type==NIL){
             STACK.pop_back();
             cseNode* tf =new truthvalueC(TF,true);
             STACK.push_back(tf);
@@ -471,31 +542,84 @@ void CSE::intrinsicFn(cseNode* node){
         string str=str1+str2;
         cseNode* node= new strC(STR,str);
         STACK.push_back(node);
+        CONTROL.pop_back();//pop second G
         
     }
+    if(node->value=="Order"){
+        STACK.pop_back();//pop order
+        cseNode* tmp=STACK.back();
+        STACK.pop_back();//pop nil or tuple
+        switch (tmp->cse_Type) {
+            case 14://nil
+            {
+                cseNode* intc =new intC(INT,to_string(0));
+                STACK.push_back(intc);
+                break;}
+            case 17:{
+                int x= dynamic_cast<tupleC*>(tmp)->value;
+                cseNode* intcx =new intC(INT,to_string(x));
+                STACK.push_back(intcx);
+                break;
+            }
+            default:  cout<<"error!!!!!!!!!!!!!!!"<<endl;
+                break;
+        }
+    }
+    
+    if(node->value=="ItoS"){
+        STACK.pop_back();//pop ItoS
+        if (STACK.back()->cse_Type==INT) {
+            string str= STACK.back()->value;
+            STACK.pop_back();
+            cseNode* node= new intC(INT,str);
+            STACK.push_back(node);
+        }else{
+            cout<<"error!!!!!!!!!!!!!!!"<<endl;
+        }
+    }
+    
 }
 
 void CSE::ISintrinsicFn(cseNode* node){
     if (node->value=="Print"||node->value=="Stem"||node->value=="Isinteger"||node->value=="Istruthvalue"||node->value=="Isstring"
-        ||node->value=="Istuple"||node->value=="Stern"||node->value=="Conc") {
+        ||node->value=="Istuple"||node->value=="Stern"||node->value=="Conc"||node->value=="Order"||node->value=="ItoS") {
         node->cse_Type=RPAL;
-        cout<<node->value<<endl;
+//        cout<<node->value<<endl;
     }
 }
 
 void CSE::HasTAB(cseNode* node){
+    if (printx.size()>1) {
+        int cap=printx.size();
+        for (int i=0; i<cap; i++) {
+            cout<<printx[i]->value;
+        }
+        return;
+    }
     if(node->cse_Type==STR){
     string str=node->value;
-    for(int i = 0; i < str.length(); i++) {
-        if (str[i]=='\\') {
-            if (str[i+1]=='n')  {cout<<"\n";i=i+1; }
-            if (str[i+1]=='t')  {cout<<"\t";i=i+1; }
-            
-        }else{
-            cout<<str[i];
+//    for(int i = 0; i < str.length(); i++) {
+//        if (str[i]=='\\') {
+//            if (str[i+1]=='n')  {cout<<endl;i=i+1;continue;}
+//            if (str[i+1]=='t')  {cout<<"\t";i=i+1;continue;}
+//            if (str[i+1]=='r')  {cout<<endl;i=i+1;continue;}
+//        }else{
+//            cout<<str[i];
+//        }
+//        
+//    }
+    for (int i = 0; i < str.length(); i++) {
+        if (str.at(i) == '\\' && str.at(i + 1) == 'n') {
+            cout << "\n";
+            i++;
+        } else if (str.at(i) == '\\' && str.at(i + 1) == 't') {
+            cout << "\t";
+            i++;
+        } else {
+            cout << str.at(i);
         }
     }
-            }
+    }
     if (node->cse_Type==INT) {
         cout<<node->value<<endl;
     }
@@ -507,14 +631,12 @@ void CSE::HasTAB(cseNode* node){
         }
         cout<<dynamic_cast<tupleC*>(node)->tuple[num-1]->value<<")"<<endl;
     }
-    cout<<endl;
+    if(node->cse_Type==LAMBDa){
+        cout<<"[lambda closure: x: 2]"<<endl;
+    }
+    if(node->cse_Type==TF){
+        if(dynamic_cast<truthvalueC*>(node)->value==true) cout<<"true"<<endl;
+        if(dynamic_cast<truthvalueC*>(node)->value==false) cout<<"false"<<endl;
+        
+    }
 }
-
-
-
-
-
-
-
-
-

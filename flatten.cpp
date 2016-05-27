@@ -40,10 +40,10 @@ void CSE::flatten(TreeNode* node){
                  (dynamic_cast<lambdaC*>(lc))->variable.push_back(idc);
             }
             CONTROL.push_back(lc);
-            if(node->getRS()!=nullptr) flatten(node->getRS());
+            if(node->getRS()!=nullptr&&node->getRS()!=NULL) flatten(node->getRS());
             return;
         }
-        case 11: {cseNode* yc =new YstarC(YStar); CONTROL.push_back(yc);break;}
+        case 11: {cseNode* yc =new YstarC(); CONTROL.push_back(yc);break;}
         case 613:{cseNode* tc=new truthvalueC(TF,true);  CONTROL.push_back(tc);break;}
         case 614:{cseNode* fc=new truthvalueC(TF,false); CONTROL.push_back(fc);break;}
         case 506:{
@@ -55,28 +55,39 @@ void CSE::flatten(TreeNode* node){
             }
             cseNode* tauc =new tauC(TAU,c);
             CONTROL.push_back(tauc);
+            
             temp=node->getLC();
             if (temp!=nullptr)
             {
                 flatten(temp);
-//                temp=temp->getRS();
+            }
+            TreeNode* temp3=node->getRS();
+            if (temp3!=nullptr)
+            {
+                flatten(temp3);
             }
             return;
         }
-        case 315:{
-            cseNode* condc= new condC(COND,node->getLC()->getRS(),node->getLC()->getRS()->getRS());
-//            condc->cse_Type=COND;
-//            condc->then=LeftC->RightS;
-//            condc->elsE=LeftC->RightS->RightS;
+        case 315:{//->
+            cseNode* condc= new condC(COND,node->getLC()->getRS(),nullptr);
+            if (node->getLC()->getRS()->getRS()!=nullptr) {
+                dynamic_cast<condC*>(condc)->elsE=node->getLC()->getRS()->getRS();
+            }else{
+                dynamic_cast<condC*>(condc)->elsE=node->getLC()->getRS();
+            }
             CONTROL.push_back(condc);
-            cseNode* opc=new UopC(UOP,0,"BATA");
+            cseNode* opc=new bataC(BATA);
             CONTROL.push_back(opc);
-//            LeftC->flatten();
-            flatten(node->getLC());
+            TreeNode* temp=node->getLC();
+            TreeNode* temp2=node->getLC()->getRS();
+            temp->setRSnull();
+            flatten(temp);
+            node->getLC()->setRS(temp2);
             return;
         }
         case 615:{cseNode* nilc =new nilC(NIL); CONTROL.push_back(nilc);break;}
-//        case 604:{}
+        case 616:{cseNode* dummyc =new dummyC(); CONTROL.push_back(dummyc);break;}
+        case 8:{cseNode* yc =new YstarC(); CONTROL.push_back(yc);break;}//ystar
         default: {cout<<"error!!!"<<endl;break;}
             
     }
@@ -84,44 +95,14 @@ void CSE::flatten(TreeNode* node){
     {
         flatten(node->getLC());}
     
-//    if (node->getLC()->getRS()!= nullptr)
-//    {
-////            LeftC->RightS->flatten();
-//       flatten(node->getLC()->getRS());
-//    }
     if (node->getRS()!= nullptr)
     {
-        //            LeftC->RightS->flatten();
         flatten(node->getRS());
     }
 
     
 }
 
-//void CtoS(stack<cseNode*> csestack){
-//    cseNode* temp;
-//    while (!csestack.empty()) {
-//        temp=csestack.top();
-//        STACK.push_back(temp);
-//        csestack.pop();
-//    }
-//}
-//
-//void print(stack<cseNode*> csestack){
-//    while (!csestack.empty()) {
-//        cout<<csestack.top()->cse_Type<<" ";
-//        csestack.pop();
-//    }
-//}
-
-//void CSE::print(vector<cseNode*> csev)
-//{
-////    const vector<cseNode*>::iterator iter = csev.begin();
-//    for (auto iter = csev.cbegin(); iter != csev.cend(); iter++)
-//    {
-//        cout <<&iter<<endl;
-//    }
-//}
 
 void CSE::print(const vector<cseNode*> valList)
 {
@@ -129,6 +110,79 @@ void CSE::print(const vector<cseNode*> valList)
     for (int i = 0; i < count;i++)
     {
         CseType x=static_cast<CseType>(valList[i]->cse_Type);
-        cout <<x<<" "<<valList[i]->value<< endl;
+        if (x==ENV) {
+            cout <<x<<"("<<dynamic_cast<envC*>(valList[i])->value<<")|";
+        }else{
+            cout <<x<<" "<<valList[i]->value<<"|";
+        }
+        
+    }
+    cout<<"      ";
+}
+
+void CSE::prints(const vector<cseNode*> valList)
+{
+    int count = valList.size();
+    for (int i = count-1; i >=0;i--)
+    {
+        CseType x=static_cast<CseType>(valList[i]->cse_Type);
+        if (x==ENV) {
+            cout <<x<<"("<<dynamic_cast<envC*>(valList[i])->value<<")|";
+        }else{
+            cout <<x<<" "<<valList[i]->value<<"|";
+        }
+    }
+    cout<<"      ";
+}
+
+void CSE::printenv(const vector<cseNode*> valList)
+{
+    cout<<endl;
+    int count = valList.size();
+//    map<string,cseNode*> words;
+
+    for (int i = 0; i < count;i++)
+    {
+        CseType x=static_cast<CseType>(valList[i]->cse_Type);
+        if (x==13) {
+            map<string,cseNode*>::iterator it=dynamic_cast<envC*>(valList[i])->pairs.begin();
+            int num= dynamic_cast<envC*>(valList[i])->value;
+            cout<<"e"<<num<<"=";
+            for (;it!=dynamic_cast<envC*>(valList[i])->pairs.end();++it) {
+                cout<<it->first<<" "<<it->second->cse_Type<<","<<it->second->value<<"|";
+            }
+            if (dynamic_cast<envC*>(valList[i])->previous!=nullptr) {
+                cout <<"pre:e("<<dynamic_cast<envC*>(dynamic_cast<envC*>(valList[i])->previous)->value <<")";
+            }
+            
+            cout<<";";
+        }
+        
+    }
+//    cout<<"      ";
+}
+
+void CSE::printenvs(const vector<cseNode*> valList)
+{
+    cout<<endl;
+    int count = valList.size();
+    //    map<string,cseNode*> words;
+    
+    for (int i = count-1; i >=0;i--)
+    {
+        CseType x=static_cast<CseType>(valList[i]->cse_Type);
+        if (x==13) {
+            map<string,cseNode*>::iterator it=dynamic_cast<envC*>(valList[i])->pairs.begin();
+            int num= dynamic_cast<envC*>(valList[i])->value;
+            cout<<"e"<<num<<"=";
+            for (;it!=dynamic_cast<envC*>(valList[i])->pairs.end();++it) {
+                cout<<it->first<<" "<<it->second->cse_Type<<","<<it->second->value<<"|";
+            }
+            if (dynamic_cast<envC*>(valList[i])->previous!=nullptr) {
+                cout <<"pre:e("<<dynamic_cast<envC*>(dynamic_cast<envC*>(valList[i])->previous)->value <<")";
+            }
+            cout<<";";
+        }
+        
     }
 }

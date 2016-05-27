@@ -3,4 +3,5 @@ RPAL compiler
 To compile: type "make"
 To clean up: type "make cl"
 
-To test p2Â£Â¨result onlyÂ£Â©: type "p2  FILENAME"
+To test p2£¨result only£©: type "p2  FILENAME"
+

@@ -24,6 +24,8 @@ public:
     int getIntType();
     TreeNode* getRS(){return RightS;}
     TreeNode* getLC(){return LeftC;}
+    void setRSnull(){RightS=nullptr;}
+    void setRS(TreeNode* x){RightS=x;}
     void addChild(TreeNode* child);
     void preOrder(int root);
     void buildTree(stack<TreeNode*> &ast, int num);

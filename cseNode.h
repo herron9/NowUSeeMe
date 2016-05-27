@@ -24,8 +24,8 @@ enum CseType{
     STR,
     GAMMa,//6
     LAMBDa,
-    YStar,
-    ETA,
+    YStar,//8
+    ETA,//9
     TF,//10
     FALSe,
     DELTA,
@@ -106,9 +106,17 @@ public:
     
 };
 
+class etaC: public cseNode{
+public:
+    etaC(CseType ty,TreeNode* ind,envC* envx){cse_Type=ty;index=ind;env=envx;}
+    TreeNode* index;
+    vector<cseNode*> vb;
+    envC* env;
+};
+
 class YstarC: public cseNode{
 public:
-    YstarC(CseType ty){cse_Type=ty;}
+    YstarC(){cse_Type=YStar;}
     
 };
 
@@ -140,13 +148,12 @@ public:
     
 };
 
-class etaC: public cseNode{
+class bataC: public cseNode{
 public:
-    etaC(CseType ty,TreeNode* ind,envC* envx){cse_Type=ty;index=ind;env=envx;}
-    TreeNode* index;
-    //    vector<cseNode> vb;
-    envC* env;
+    bataC(CseType ty){cse_Type=ty;}
+    
 };
+
 
 class nilC: public cseNode{
 public:
