@@ -1,7 +1,9 @@
-RPAL compiler
+#RPAL compiler
+
+Implement a lexical analyzer,a recursive descent parser,ub-tree (partial) standardizer, and the 13-rule CSE machine for the RPAL language. 
 
 To compile: type "make"
 To clean up: type "make cl"
 
-To test p2£¨result only£©: type "p2  FILENAME"
+To test p2Â£Â¨result onlyÂ£Â©: type "p2  FILENAME"
 
